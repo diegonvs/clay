@@ -106,7 +106,6 @@ const ClayNavigationBar: React.FunctionComponent<Props> = ({
 									className={classNames('nav-item', {
 										active,
 									})}
-									data-nav-item-index={index}
 									key={index}
 									onClick={onItemClicked}
 								>
