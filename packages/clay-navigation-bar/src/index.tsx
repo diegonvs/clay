@@ -5,19 +5,41 @@
  */
 
 import classNames from 'classnames';
-import React, {useEffect} from 'react';
+import React from 'react';
 
-import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import ClayLink from '@clayui/link';
+import warning from 'warning';
 
 import {useTransition} from './Hooks';
 
+interface ListItemProps extends React.HTMLAttributes<HTMLLIElement> {
+	/**
+	 * Determines the active state of an dropdown list item.
+	 */
+	active?: boolean;
+	
+	/**
+	 * Children elements
+	 */
+	children: React.ReactElement;
+
+	/**
+	 * Label
+	 */
+	label: string;
+}
+
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
 	/**
-	 * An array of items that will be rendered on the dropdown.
+	 * Passes the label text that will be placed on the toggler of dropdown.
 	 */
-	items: Array<{active?: boolean; href?: string; label: string}>;
+	activeLabel: string;
+
+	/**
+	 * Children elements
+	 */
+	children: React.ReactElement<ListItemProps>[];
 
 	/**
 	 * Determines the style of the Navigation Bar
@@ -25,24 +47,49 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 	inverted?: boolean;
 
 	/**
-	 * This property is used to pass a MouseEvent from a NavItem to a
-	 * function when this element is clicked.
-	 */
-	onItemClicked?: (
-		event: React.MouseEvent<HTMLLIElement, MouseEvent>
-	) => void | undefined;
-
-	/**
 	 * Path to the location of the spritemap resource.
 	 */
 	spritemap: string;
 }
 
-const ClayNavigationBar: React.FunctionComponent<Props> = ({
+type ListItemType = React.FunctionComponent<ListItemProps>;
+
+const ListItem: ListItemType = ({
+	active,
 	className,
+	children,
+	...otherProps
+}) => {
+
+	return (
+		<li {...otherProps} className={classNames('nav-item', {
+			className,
+			active
+		})}>
+			{React.Children.map(
+				children,
+				(
+					child: React.ReactElement<ListItemProps>,
+					index
+				) => {
+					return React.cloneElement(child, {
+						...child.props,
+						className: classNames('nav-link', child.props.className, {
+							active
+						}),
+						key: index,
+					});
+				}
+			)}
+		</li>
+	);
+};
+
+const ClayNavigationBar: React.FunctionComponent<Props> & { ListItem: ListItemType; } = ({
+	activeLabel,
+	className,
+	children,
 	inverted = false,
-	items,
-	onItemClicked,
 	spritemap,
 	...otherProps
 }) => {
@@ -54,7 +101,11 @@ const ClayNavigationBar: React.FunctionComponent<Props> = ({
 		handleClickToggler,
 	] = useTransition(visible, setVisible, contentRef);
 
-	const activeItem = items.find(item => item.hasOwnProperty('active'));
+	const activeElements = children.filter(child => child.props.active);
+	
+	warning(activeElements, `You must provide at least one active attribute on ClayNavigationBar.ListItem`);
+
+	const activeElementLabel = activeElements[0].props.label;
 
 	return (
 		<nav
@@ -84,7 +135,7 @@ const ClayNavigationBar: React.FunctionComponent<Props> = ({
 					displayType="secondary"
 					onClick={handleClickToggler}
 				>
-					{activeItem ? activeItem.label : ''}
+					{activeElementLabel}
 
 					<ClayIcon spritemap={spritemap} symbol="caret-bottom" />
 				</ClayLink>
@@ -100,42 +151,7 @@ const ClayNavigationBar: React.FunctionComponent<Props> = ({
 				>
 					<div className="container-fluid container-fluid-max-xl">
 						<ul className="navbar-nav">
-							{items.map(({active, href, label}, index) => (
-								<li
-									className={classNames('nav-item', {
-										active,
-									})}
-									key={index}
-									onClick={onItemClicked}
-								>
-									{href ? (
-										<ClayLink
-											className={classNames('nav-link', {
-												active,
-											})}
-											displayType="secondary"
-											href={href}
-										>
-											<span className="navbar-text-truncate">
-												{label}
-											</span>
-										</ClayLink>
-									) : (
-										<ClayButton
-											block
-											className={classNames('nav-link', {
-												active,
-											})}
-											displayType="unstyled"
-											small
-										>
-											<span className="navbar-text-truncate">
-												{label}
-											</span>
-										</ClayButton>
-									)}
-								</li>
-							))}
+							{children}
 						</ul>
 					</div>
 				</div>
@@ -143,5 +159,7 @@ const ClayNavigationBar: React.FunctionComponent<Props> = ({
 		</nav>
 	);
 };
+
+ClayNavigationBar.ListItem = ListItem;
 
 export default ClayNavigationBar;
