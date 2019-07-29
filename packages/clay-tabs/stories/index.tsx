@@ -26,7 +26,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 					<ClayTabs.Item tabName="Teste 4" />
 				</ClayTabs>
 				<div className="tab-content">
-					<ClayTabs.Content active={activeValue} fade index={0}>
+					<ClayTabs.TabPane active={activeValue} fade index={0}>
 						1. Single origin, extra id beans, eu to go, skinny americano
 						ut aftertaste sugar. At americano, viennese variety iced
 						grounds, grinder froth and pumpkin spice aromatic. Cultivar
@@ -35,8 +35,8 @@ storiesOf('ClayTabs', module).add('default', () => {
 						organic cappuccino java plunger pot. Single shot variety
 						pumpkin spice seasonal skinny barista carajillo robust
 						cream.
-					</ClayTabs.Content>
-					<ClayTabs.Content active={activeValue} fade index={1}>
+					</ClayTabs.TabPane>
+					<ClayTabs.TabPane active={activeValue} fade index={1}>
 						2. Single origin, extra id beans, eu to go, skinny americano
 						ut aftertaste sugar. At americano, viennese variety iced
 						grounds, grinder froth and pumpkin spice aromatic. Cultivar
@@ -45,8 +45,8 @@ storiesOf('ClayTabs', module).add('default', () => {
 						organic cappuccino java plunger pot. Single shot variety
 						pumpkin spice seasonal skinny barista carajillo robust
 						cream.
-					</ClayTabs.Content>
-					<ClayTabs.Content active={activeValue} fade index={2}>
+					</ClayTabs.TabPane>
+					<ClayTabs.TabPane active={activeValue} fade index={2}>
 						3. Single origin, extra id beans, eu to go, skinny americano
 						ut aftertaste sugar. At americano, viennese variety iced
 						grounds, grinder froth and pumpkin spice aromatic. Cultivar
@@ -55,8 +55,8 @@ storiesOf('ClayTabs', module).add('default', () => {
 						organic cappuccino java plunger pot. Single shot variety
 						pumpkin spice seasonal skinny barista carajillo robust
 						cream.
-					</ClayTabs.Content>
-					<ClayTabs.Content active={activeValue} fade index={3}>
+					</ClayTabs.TabPane>
+					<ClayTabs.TabPane active={activeValue} fade index={3}>
 						4. Single origin, extra id beans, eu to go, skinny americano
 						ut aftertaste sugar. At americano, viennese variety iced
 						grounds, grinder froth and pumpkin spice aromatic. Cultivar
@@ -65,7 +65,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 						organic cappuccino java plunger pot. Single shot variety
 						pumpkin spice seasonal skinny barista carajillo robust
 						cream.
-					</ClayTabs.Content>
+					</ClayTabs.TabPane>
 				</div>
 			</>
 		)

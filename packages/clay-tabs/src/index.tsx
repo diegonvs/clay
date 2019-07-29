@@ -5,7 +5,7 @@
  */
 
 import classNames from 'classnames';
-import Content from './Content';
+import TabPane from './TabPane';
 import Item from './Item';
 import React from 'react';
 
@@ -20,7 +20,7 @@ interface IProps extends React.HTMLAttributes<HTMLUListElement> {
 }
 
 export const ClayTabs: React.FunctionComponent<IProps> & {
-	Content: typeof Content;
+	TabPane: typeof TabPane;
 	Item: typeof Item;
 } = ({
 	active = 0,
@@ -59,7 +59,7 @@ export const ClayTabs: React.FunctionComponent<IProps> & {
 	);
 };
 
-ClayTabs.Content = Content;
+ClayTabs.TabPane = TabPane;
 
 ClayTabs.Item = Item;
 

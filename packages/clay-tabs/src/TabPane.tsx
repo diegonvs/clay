@@ -19,7 +19,7 @@ interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 	index: number;
 }
 
-export const Content: React.FunctionComponent<IProps> | null = ({
+export const TabPane: React.FunctionComponent<IProps> | null = ({
 	active = 0,
 	children,
 	className,
@@ -56,5 +56,5 @@ export const Content: React.FunctionComponent<IProps> | null = ({
 };
 
 export default React.forwardRef((props: IProps, ref?) => (
-	<Content {...props} forwardRef={ref} />
+	<TabPane {...props} forwardRef={ref} />
 ));
