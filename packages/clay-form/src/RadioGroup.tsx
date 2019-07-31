@@ -47,6 +47,9 @@ const ClayRadioGroup: React.FunctionComponent<IGroupProps> = ({
 			{React.Children.map(
 				children,
 				(child: React.ReactElement<IRadioProps>, i) => {
+					if (!React.isValidElement(child)) {
+						return null;
+					}
 					return React.cloneElement(child, {
 						...child.props,
 						checked: selectedValue === child.props.value,

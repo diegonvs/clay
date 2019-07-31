@@ -5,54 +5,61 @@
  */
 
 import classNames from 'classnames';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
-	active: number;
-
-	children?: any;
+	active?: boolean;
 
 	forwardRef?: React.Ref<any>;
 
 	fade?: boolean;
-
-	index: number;
 }
 
+const delay = (fn: Function) => {
+	return setTimeout(() => {
+		fn();
+	}, 300);
+};
+
 export const TabPane: React.FunctionComponent<IProps> | null = ({
-	active = 0,
+	active,
 	children,
 	className,
 	fade,
 	forwardRef,
-	index = 0,
 	...otherProps
 }: IProps) => {
-	console.log('active: ', active);
-	console.log('index: ', index);
-	console.log(children);
-	if (index === active) {
-		return (
-			<div
-				className={classNames(
-					'tab-pane',
-					{
-						'active': active === index,
-						fade,
-						'show': active === index,
-					},
-					className
-				)}
-				ref={forwardRef}
-				role="tabpanel"
-				{...otherProps}
-			>
-				{children}
-			</div>
-		);
-	}
+	const [visibleClassShow, setVisibleClassShow] = useState<boolean>(false);
 
-	return null;
+	useEffect(() => {
+		const timer = delay(() => {
+			setVisibleClassShow(true);
+		});
+
+		return () => {
+			setVisibleClassShow(false);
+			clearTimeout(timer);
+		};
+	}, [children]);
+
+	return (
+		<div
+			className={classNames(
+				'tab-pane',
+				{
+					active,
+					fade,
+					show: active && visibleClassShow,
+				},
+				className
+			)}
+			ref={forwardRef}
+			role="tabpanel"
+			{...otherProps}
+		>
+			{visibleClassShow && children}
+		</div>
+	);
 };
 
 export default React.forwardRef((props: IProps, ref?) => (

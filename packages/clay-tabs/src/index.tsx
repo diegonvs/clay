@@ -5,9 +5,10 @@
  */
 
 import classNames from 'classnames';
-import TabPane from './TabPane';
+import Content from './Content';
 import Item from './Item';
 import React from 'react';
+import TabPane from './TabPane';
 
 interface IProps extends React.HTMLAttributes<HTMLUListElement> {
 	active?: number;
@@ -20,6 +21,7 @@ interface IProps extends React.HTMLAttributes<HTMLUListElement> {
 }
 
 export const ClayTabs: React.FunctionComponent<IProps> & {
+	Content: typeof Content;
 	TabPane: typeof TabPane;
 	Item: typeof Item;
 } = ({
@@ -51,13 +53,15 @@ export const ClayTabs: React.FunctionComponent<IProps> & {
 					key: index,
 					onClick: () => {
 						console.log('index from onClick: ', index);
-						onValueChange && onValueChange(index)
-					}
+						onValueChange && onValueChange(index);
+					},
 				});
 			})}
 		</ul>
 	);
 };
+
+ClayTabs.Content = Content;
 
 ClayTabs.TabPane = TabPane;
 
