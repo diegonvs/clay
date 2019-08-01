@@ -23,7 +23,8 @@
 		"classnames": "^2.2.6"
 	},
 	"devDependencies": {
-		"@clayui/css": "^3.0.0-milestone.1"
+		"@clayui/css": "^3.0.0-milestone.2",
+		"@clayui/drop-down": "^3.0.0-milestone.2"
 	},
 	"peerDependencies": {
 		"react": "^16.8.1",

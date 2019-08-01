@@ -7,28 +7,31 @@
 import classNames from 'classnames';
 import React, {useEffect, useState} from 'react';
 
-interface IProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ITabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
+	/**
+	 * Flag to indicate if `active` classname should be applied
+	 */
 	active?: boolean;
 
-	forwardRef?: React.Ref<any>;
-
+	/**
+	 * Flag to indicate if `fade` classname that applies an fading animation should be applied.
+	 */
 	fade?: boolean;
 }
 
 const delay = (fn: Function) => {
 	return setTimeout(() => {
 		fn();
-	}, 300);
+	}, 100);
 };
 
-export const TabPane: React.FunctionComponent<IProps> | null = ({
-	active,
+const TabPane: React.FunctionComponent<ITabPaneProps> = ({
+	active = false,
 	children,
 	className,
 	fade,
-	forwardRef,
 	...otherProps
-}: IProps) => {
+}: ITabPaneProps) => {
 	const [visibleClassShow, setVisibleClassShow] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -37,10 +40,10 @@ export const TabPane: React.FunctionComponent<IProps> | null = ({
 		});
 
 		return () => {
-			setVisibleClassShow(false);
 			clearTimeout(timer);
+			setVisibleClassShow(false);
 		};
-	}, [children]);
+	}, [active]);
 
 	return (
 		<div
@@ -53,15 +56,12 @@ export const TabPane: React.FunctionComponent<IProps> | null = ({
 				},
 				className
 			)}
-			ref={forwardRef}
 			role="tabpanel"
 			{...otherProps}
 		>
-			{visibleClassShow && children}
+			{children}
 		</div>
 	);
 };
 
-export default React.forwardRef((props: IProps, ref?) => (
-	<TabPane {...props} forwardRef={ref} />
-));
+export default TabPane;

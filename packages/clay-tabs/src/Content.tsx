@@ -8,35 +8,37 @@ import classNames from 'classnames';
 import React from 'react';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
-	active: number;
+	/**
+	 * Receives a number that indicates the content index that will be rendered.
+	 */
+	activeIndex: number;
 
-	children: any;
+	/**
+	 * Flag to indicate if `fade` classname that applies an fading animation should be applied.
+	 */
+	fade?: boolean;
 }
 
 const Content: React.FunctionComponent<IProps> = ({
-	active = 0,
+	activeIndex = 0,
 	children,
 	className,
+	fade = false,
 	...otherProps
 }: IProps) => {
-	const activeChild = children.filter(
-		(child: React.ReactElement, index: number) => {
-			if (!React.isValidElement(child)) {
-				return false;
-			}
-
-			if (active === index) {
-				return true;
-			}
-		}
-	);
-
 	return (
 		<div className={classNames('tab-content', className)} {...otherProps}>
-			{React.cloneElement(activeChild[0], {
-				...activeChild[0].props,
-				active: true,
-				key: 'tabElement',
+			{React.Children.map(children, (child, index) => {
+				if (!React.isValidElement(child)) {
+					return null;
+				}
+
+				return React.cloneElement(child, {
+					...child.props,
+					active: activeIndex === index,
+					key: index,
+					fade,
+				});
 			})}
 		</div>
 	);

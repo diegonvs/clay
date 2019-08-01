@@ -9,14 +9,32 @@ import Content from './Content';
 import Item from './Item';
 import React from 'react';
 import TabPane from './TabPane';
+import {ElementType} from './types';
 
 interface IProps extends React.HTMLAttributes<HTMLUListElement> {
-	active?: number;
+	/**
+	 * Receives a number that indicates the content index that will be rendered.
+	 */
+	activeIndex: number;
 
+	/**
+	 * Tab Item component to render. Can be an 'anchor' or a 'button'.
+	 */
+	component?: ElementType;
+
+	/**
+	 * Justify the nav items according the tab content.
+	 */
 	justified?: boolean;
 
+	/**
+	 * Applies a modern style to the tab.
+	 */
 	modern?: boolean;
 
+	/**
+	 * Callback to be used when clicking to a Tab Item.
+	 */
 	onValueChange?: (val: number) => void;
 }
 
@@ -25,9 +43,10 @@ export const ClayTabs: React.FunctionComponent<IProps> & {
 	TabPane: typeof TabPane;
 	Item: typeof Item;
 } = ({
-	active = 0,
+	activeIndex = 0,
 	children,
 	className,
+	component = 'button',
 	justified,
 	modern = false,
 	onValueChange,
@@ -49,11 +68,12 @@ export const ClayTabs: React.FunctionComponent<IProps> & {
 				}
 				return React.cloneElement(child, {
 					...child.props,
-					active: active === index,
+					active: activeIndex === index,
+					component,
 					key: index,
 					onClick: () => {
-						console.log('index from onClick: ', index);
-						onValueChange && onValueChange(index);
+						console.log(index);
+						return onValueChange && onValueChange(index);
 					},
 				});
 			})}
