@@ -18,7 +18,10 @@ interface ITabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
 	 */
 	fade?: boolean;
 
-	keyValue: number;
+	/**
+	 * TabPane's key.
+	 */
+	tabKey: number;
 }
 
 const delay = (fn: Function) => {

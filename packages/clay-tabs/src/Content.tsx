@@ -9,9 +9,9 @@ import React from 'react';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 	/**
-	 * Receives a number that indicates the content index that will be rendered.
+	 * Receives a number that indicates the `tabKey` to be rendered.
 	 */
-	activeIndex: number;
+	activeTabKey: number;
 
 	/**
 	 * Flag to indicate if `fade` classname that applies an fading animation should be applied.
@@ -20,7 +20,7 @@ interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Content: React.FunctionComponent<IProps> = ({
-	activeIndex = 0,
+	activeTabKey = 0,
 	children,
 	className,
 	fade = false,
@@ -35,7 +35,7 @@ const Content: React.FunctionComponent<IProps> = ({
 
 				return React.cloneElement(child, {
 					...child.props,
-					active: activeIndex === child.props.keyValue,
+					active: activeTabKey === child.props.tabKey,
 					fade,
 					key: index,
 				});

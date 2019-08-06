@@ -10,6 +10,7 @@ import ClayDropDown, {Align} from '@clayui/drop-down';
 import ClayTabs from '../src';
 import React from 'react';
 import {boolean, select} from '@storybook/addon-knobs';
+import {ClayIconSpriteContext} from '@clayui/icon';
 import {ElementType} from '../src/types';
 import {storiesOf} from '@storybook/react';
 
@@ -24,6 +25,7 @@ const DropDownWithState: React.FunctionComponent<any> = ({
 		<ClayDropDown
 			active={active}
 			alignmentPosition={Align.BottomLeft}
+			hasRightSymbols
 			onActiveChange={newVal => setActive(newVal)}
 			trigger={trigger}
 			{...others}
@@ -42,119 +44,164 @@ const spritemap = require('@clayui/css/lib/images/icons/icons.svg');
 
 storiesOf('ClayTabs', module).add('default', () => {
 	const ClayTabsWithState = () => {
-		const [activeValue, setActiveValue] = React.useState<number>(0);
+		const [activeTabKeyValue, setActiveTabKeyValue] = React.useState<
+			number
+		>(0);
 
-		const onClickImpl = (val: number) => setActiveValue(val);
+		const onClickImpl = (val: number) => setActiveTabKeyValue(val);
 
 		const dropdownTabsItems = [
 			{
+				active: activeTabKeyValue == 5,
 				disabled: true,
-				itemKey: 5,
 				label: 'Tab 6',
 				onClick: onClickImpl,
+				tabKey: 5,
 			},
 			{
-				itemKey: 6,
+				active: activeTabKeyValue == 6,
 				label: 'Tab 7',
 				onClick: onClickImpl,
+				tabKey: 6,
 			},
 			{
-				itemKey: 7,
+				active: activeTabKeyValue == 7,
 				label: 'Tab 8',
 				onClick: onClickImpl,
+				tabKey: 7,
 			},
 		];
 
 		return (
 			<>
 				<ClayTabs
-					activeIndex={activeValue}
-					component={
-						select(
-							'Tab Item Component',
-							tabElements,
-							'button'
-						) as ElementType
-					}
 					justified={boolean('Justified', false) as false}
 					modern={boolean('Modern', true) as true}
-					spritemap={spritemap}
 				>
-					<ClayTabs.Item
-						disabled={boolean('Disable first tab', false)}
-						itemKey={0}
-						onClick={onClickImpl}
-						tabName="Tab 1"
-					/>
-					<ClayTabs.Item
-						disabled={boolean('Disable second tab', true)}
-						itemKey={1}
-						onClick={onClickImpl}
-						tabName="Tab 2"
-					/>
-					<ClayTabs.Item
-						disabled={boolean('Disable third tab', false)}
-						itemKey={2}
-						onClick={onClickImpl}
-						tabName="Tab 3"
-					/>
-					<ClayTabs.Item
-						disabled={boolean('Disable fourth tab', false)}
-						itemKey={3}
-						onClick={onClickImpl}
-						tabName="Tab 4"
-					/>
+					<ClayIconSpriteContext.Provider value={spritemap}>
+						<ClayTabs.Item
+							active={activeTabKeyValue == 0}
+							component={
+								select(
+									'Tab Item Component',
+									tabElements,
+									'button'
+								) as ElementType
+							}
+							disabled={boolean('Disable first tab', false)}
+							onClick={onClickImpl}
+							tabKey={0}
+							tabName="Tab 1"
+						/>
+						<ClayTabs.Item
+							active={activeTabKeyValue == 1}
+							component={
+								select(
+									'Tab Item Component',
+									tabElements,
+									'button'
+								) as ElementType
+							}
+							disabled={boolean('Disable second tab', true)}
+							onClick={onClickImpl}
+							tabKey={1}
+							tabName="Tab 2"
+						/>
+						<ClayTabs.Item
+							active={activeTabKeyValue == 2}
+							component={
+								select(
+									'Tab Item Component',
+									tabElements,
+									'button'
+								) as ElementType
+							}
+							disabled={boolean('Disable third tab', false)}
+							onClick={onClickImpl}
+							tabKey={2}
+							tabName="Tab 3"
+						/>
+						<ClayTabs.Item
+							active={activeTabKeyValue == 3}
+							component={
+								select(
+									'Tab Item Component',
+									tabElements,
+									'button'
+								) as ElementType
+							}
+							disabled={boolean('Disable fourth tab', false)}
+							onClick={onClickImpl}
+							tabKey={3}
+							tabName="Tab 4"
+						/>
 
-					<DropDownWithState
-						trigger={
-							<ClayTabs.Item
-								disabled={boolean('Disable fourth tab', false)}
-								dropdown
-								itemKey={4}
-								onClick={onClickImpl}
-								tabName="Tab 5"
-							/>
-						}
-					>
-						<ClayDropDown.ItemList>
-							{dropdownTabsItems.map(
-								(
-									{
-										disabled = false,
-										itemKey,
-										label,
-										onClick,
-									},
-									i
-								) => {
-									return (
-										<ClayDropDown.Item
-											active={activeValue === itemKey}
-											disabled={disabled}
-											key={i}
-											onClick={() => {
-												onClick(itemKey);
-											}}
-											spritemap={spritemap}
-											symbolRight={
-												activeValue === itemKey
-													? 'check'
-													: undefined
-											}
-										>
-											{label}
-										</ClayDropDown.Item>
-									);
-								}
-							)}
-						</ClayDropDown.ItemList>
-					</DropDownWithState>
+						<DropDownWithState
+							trigger={
+								<ClayTabs.Item
+									active={[5, 6, 7].includes(
+										activeTabKeyValue
+									)}
+									component={
+										select(
+											'Tab Item Component',
+											tabElements,
+											'button'
+										) as ElementType
+									}
+									disabled={boolean(
+										'Disable fourth tab',
+										false
+									)}
+									dropdown
+									onClick={onClickImpl}
+									tabKey={4}
+									tabName="Tab 5"
+								/>
+							}
+						>
+							<ClayDropDown.ItemList>
+								{dropdownTabsItems.map(
+									(
+										{
+											disabled = false,
+											label,
+											onClick,
+											tabKey,
+										},
+										i
+									) => {
+										return (
+											<ClayDropDown.Item
+												active={
+													activeTabKeyValue === tabKey
+												}
+												disabled={disabled}
+												key={i}
+												onClick={() => {
+													onClick(tabKey);
+												}}
+												spritemap={spritemap}
+												symbolRight={
+													activeTabKeyValue === tabKey
+														? 'check'
+														: undefined
+												}
+											>
+												{label}
+											</ClayDropDown.Item>
+										);
+									}
+								)}
+							</ClayDropDown.ItemList>
+						</DropDownWithState>
+					</ClayIconSpriteContext.Provider>
 				</ClayTabs>
 				<ClayTabs.Content
-					activeIndex={activeValue}
+					activeTabKey={activeTabKeyValue}
 					fade={boolean('Fade', true)}
 				>
-					<ClayTabs.TabPane keyValue={0}>
+					<ClayTabs.TabPane tabKey={0}>
 						{`1. Single origin, extra id beans, eu to go, skinny
 						americano ut aftertas te sugar. At americano, viennese
 						variety iced grounds, grinder froth and pumpkin spice
@@ -164,7 +211,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 						plunger pot. Single shot variety pumpkin spice seasonal
 						skinny barista carajillo robust cream.`}
 					</ClayTabs.TabPane>
-					<ClayTabs.TabPane keyValue={1}>
+					<ClayTabs.TabPane tabKey={1}>
 						{`2. Single origin, extra id beans, eu to go, skinny
 						americano ut aftertaste sugar. At americano, viennese
 						variety iced grounds, grinder froth and pumpkin spice
@@ -174,7 +221,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 						plunger pot. Single shot variety pumpkin spice seasonal
 						skinny barista carajillo robust cream.`}
 					</ClayTabs.TabPane>
-					<ClayTabs.TabPane keyValue={2}>
+					<ClayTabs.TabPane tabKey={2}>
 						{`3. Single origin, extra id beans, eu to go, skinny
 						americano ut aftertaste sugar. At americano, viennese
 						variety iced grounds, grinder froth and pumpkin spice
@@ -184,7 +231,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 						plunger pot. Single shot variety pumpkin spice seasonal
 						skinny barista carajillo robust cream.`}
 					</ClayTabs.TabPane>
-					<ClayTabs.TabPane keyValue={3}>
+					<ClayTabs.TabPane tabKey={3}>
 						{`4. Single origin, extra id beans, eu to go, skinny
 						americano ut aftertaste sugar. At americano, viennese
 						variety iced grounds, grinder froth and pumpkin spice
@@ -194,7 +241,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 						plunger pot. Single shot variety pumpkin spice seasonal
 						skinny barista carajillo robust cream.`}
 					</ClayTabs.TabPane>
-					<ClayTabs.TabPane keyValue={4}>
+					<ClayTabs.TabPane tabKey={4}>
 						{`4. Single origin, extra id beans, eu to go, skinny
 						americano ut aftertaste sugar. At americano, viennese
 						variety iced grounds, grinder froth and pumpkin spice
@@ -204,7 +251,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 						plunger pot. Single shot variety pumpkin spice seasonal
 						skinny barista carajillo robust cream.`}
 					</ClayTabs.TabPane>
-					<ClayTabs.TabPane keyValue={5}>
+					<ClayTabs.TabPane tabKey={5}>
 						{`6. Single origin, extra id beans, eu to go, skinny
 						americano ut aftertaste sugar. At americano, viennese
 						variety iced grounds, grinder froth and pumpkin spice
@@ -214,7 +261,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 						plunger pot. Single shot variety pumpkin spice seasonal
 						skinny barista carajillo robust cream.`}
 					</ClayTabs.TabPane>
-					<ClayTabs.TabPane keyValue={6}>
+					<ClayTabs.TabPane tabKey={6}>
 						{`7. Single origin, extra id beans, eu to go, skinny
 						americano ut aftertaste sugar. At americano, viennese
 						variety iced grounds, grinder froth and pumpkin spice
@@ -224,7 +271,7 @@ storiesOf('ClayTabs', module).add('default', () => {
 						plunger pot. Single shot variety pumpkin spice seasonal
 						skinny barista carajillo robust cream.`}
 					</ClayTabs.TabPane>
-					<ClayTabs.TabPane keyValue={7}>
+					<ClayTabs.TabPane tabKey={7}>
 						{`8. Single origin, extra id beans, eu to go, skinny
 						americano ut aftertaste sugar. At americano, viennese
 						variety iced grounds, grinder froth and pumpkin spice

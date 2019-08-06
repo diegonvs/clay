@@ -6,12 +6,11 @@
 
 import classNames from 'classnames';
 import Content from './Content';
-import Context, {IContext} from './Context';
 import Item from './Item';
 import React from 'react';
 import TabPane from './TabPane';
 
-interface IProps extends React.HTMLAttributes<HTMLUListElement>, IContext {
+interface IProps extends React.HTMLAttributes<HTMLUListElement> {
 	/**
 	 * Justify the nav items according the tab content.
 	 */
@@ -28,39 +27,28 @@ export const ClayTabs: React.FunctionComponent<IProps> & {
 	TabPane: typeof TabPane;
 	Item: typeof Item;
 } = ({
-	activeIndex,
 	children,
 	className,
-	component = 'button',
 	justified,
 	modern = false,
-	spritemap,
 	...otherProps
 }: IProps) => {
-	const context = {
-		activeIndex: activeIndex || 0,
-		component: component || 'button',
-		spritemap,
-	};
-
 	return (
-		<Context.Provider value={context}>
-			<ul
-				className={classNames(
-					`nav`,
-					{
-						'nav-justified': justified,
-						'nav-tabs': !modern,
-						'nav-underline': modern,
-					},
-					className
-				)}
-				role="tablist"
-				{...otherProps}
-			>
-				{children}
-			</ul>
-		</Context.Provider>
+		<ul
+			className={classNames(
+				`nav`,
+				{
+					'nav-justified': justified,
+					'nav-tabs': !modern,
+					'nav-underline': modern,
+				},
+				className
+			)}
+			role="tablist"
+			{...otherProps}
+		>
+			{children}
+		</ul>
 	);
 };
 

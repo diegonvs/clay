@@ -5,16 +5,29 @@
  */
 
 import classNames from 'classnames';
-import Context from './Context';
-import React, {useContext} from 'react';
+import ClayIcon from '@clayui/icon';
+import React from 'react';
+import {ElementType} from './types';
 
-interface IProps
-	extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onClick'> {
+interface IProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onClick'> {
+	/**
+	 * Flag to indicate if the component is active or not.
+	 */
+	active: boolean;
+
+	/**
+	 * Tab Item component to render. Can be an 'anchor' or a 'button'.
+	 */
+	component?: ElementType;
+
 	/**
 	 * Flag to indicate if the TabPane is disabled.
 	 */
 	disabled?: boolean;
 
+	/**
+	 * Flag to indicate if the Tab Item is a dropdown.
+	 */
 	dropdown?: boolean;
 
 	forwardRef?: React.Ref<any>;
@@ -26,34 +39,43 @@ interface IProps
 		HTMLAnchorElement | HTMLButtonElement
 	>;
 
-	itemKey: number;
+	/**
+	 * Registers the `tabKey` for the Tab Item.
+	 */
+	tabKey: number;
 
 	/**
 	 * Callback to be used when clicking to a Tab Item.
 	 */
 	onClick?: (val: number) => void;
 
+	/**
+	 * The path to the SVG spritemap file containing the icons.
+	 */
+	spritemap?: string;
+
+	/**
+	 * Name of the Tab
+	 */
 	tabName: string;
 }
 
 const TabHeader = React.forwardRef(
 	(
 		{
-			activeIndex,
-			component,
+			active,
+			component = 'button',
 			disabled = false,
 			dropdown = false,
 			forwardRef,
 			itemElementProps = {},
-			itemKey,
+			tabKey,
 			onClick,
 			spritemap,
 			tabName,
-		}: any,
+		}: IProps,
 		IProps
 	) => {
-		const active = activeIndex === itemKey;
-
 		if (component === 'anchor') {
 			return (
 				<>
@@ -67,20 +89,18 @@ const TabHeader = React.forwardRef(
 						})}
 						href={`#${tabName.trim().toLowerCase()}`}
 						id={`${tabName}Tab`}
-						onClick={() => onClick && onClick(itemKey)}
+						onClick={() => onClick && onClick(tabKey)}
 						ref={forwardRef}
 						role="tab"
 						tabIndex={disabled ? -1 : undefined}
 						{...itemElementProps}
 					>
 						{tabName}
-						{dropdown && spritemap && (
-							<svg
-								className="lexicon-icon lexicon-icon-caret-bottom"
-								role="presentation"
-							>
-								<use xlinkHref={`${spritemap}#caret-bottom`} />
-							</svg>
+						{dropdown && (
+							<ClayIcon
+								spritemap={spritemap}
+								symbol="caret-bottom"
+							/>
 						)}
 					</a>
 				</>
@@ -98,7 +118,7 @@ const TabHeader = React.forwardRef(
 						disabled,
 					})}
 					id={`${tabName}Tab`}
-					onClick={() => onClick && onClick(itemKey)}
+					onClick={() => onClick && onClick(tabKey)}
 					ref={forwardRef}
 					role="tab"
 					tabIndex={disabled ? -1 : undefined}
@@ -106,13 +126,8 @@ const TabHeader = React.forwardRef(
 					{...itemElementProps}
 				>
 					{tabName}
-					{dropdown && spritemap && (
-						<svg
-							className="lexicon-icon lexicon-icon-caret-bottom"
-							role="presentation"
-						>
-							<use xlinkHref={`${spritemap}#caret-bottom`} />
-						</svg>
+					{dropdown && (
+						<ClayIcon spritemap={spritemap} symbol="caret-bottom" />
 					)}
 				</button>
 			</>
@@ -121,18 +136,19 @@ const TabHeader = React.forwardRef(
 );
 
 const Item: React.FunctionComponent<IProps> = ({
+	active = false,
+	component,
 	className,
 	disabled,
 	dropdown,
 	forwardRef,
 	itemElementProps,
-	itemKey,
+	tabKey,
 	onClick = () => {},
+	spritemap,
 	tabName,
 	...otherProps
 }: IProps) => {
-	const {activeIndex, component, spritemap} = useContext(Context);
-
 	return (
 		<li
 			className={classNames(
@@ -146,15 +162,15 @@ const Item: React.FunctionComponent<IProps> = ({
 		>
 			{tabName && (
 				<TabHeader
-					activeIndex={activeIndex}
+					active={active}
 					component={component}
 					disabled={disabled}
 					dropdown={dropdown}
 					forwardRef={forwardRef}
 					itemElementProps={itemElementProps}
-					itemKey={itemKey}
 					onClick={onClick}
 					spritemap={spritemap}
+					tabKey={tabKey}
 					tabName={tabName}
 				/>
 			)}
