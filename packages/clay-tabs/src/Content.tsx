@@ -35,9 +35,9 @@ const Content: React.FunctionComponent<IProps> = ({
 
 				return React.cloneElement(child, {
 					...child.props,
-					active: activeIndex === index,
-					key: index,
+					active: activeIndex === child.props.keyValue,
 					fade,
+					key: index,
 				});
 			})}
 		</div>

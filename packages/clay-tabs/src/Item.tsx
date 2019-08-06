@@ -5,22 +5,11 @@
  */
 
 import classNames from 'classnames';
-import React from 'react';
-import {ElementType} from './types';
+import Context from './Context';
+import React, {useContext} from 'react';
 
-interface IProps extends React.HTMLAttributes<HTMLLIElement> {
-	/**
-	 * internal, used for just evaluate if an item is active or not, checking activeIndex
-	 * @internal
-	 */
-	active?: boolean;
-
-	/**
-	 * internal, used to define a component type from index
-	 * @internal
-	 */
-	component?: ElementType;
-
+interface IProps
+	extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onClick'> {
 	/**
 	 * Flag to indicate if the TabPane is disabled.
 	 */
@@ -31,10 +20,18 @@ interface IProps extends React.HTMLAttributes<HTMLLIElement> {
 	forwardRef?: React.Ref<any>;
 
 	/**
-	 * internal, used for onValueChange
-	 * @internal
+	 * Props to be added to the item element that can be an anchor or a button.
 	 */
-	onClick?: (event: React.BaseSyntheticEvent) => void;
+	itemElementProps?: React.HTMLAttributes<
+		HTMLAnchorElement | HTMLButtonElement
+	>;
+
+	itemKey: number;
+
+	/**
+	 * Callback to be used when clicking to a Tab Item.
+	 */
+	onClick?: (val: number) => void;
 
 	tabName: string;
 }
@@ -42,68 +39,100 @@ interface IProps extends React.HTMLAttributes<HTMLLIElement> {
 const TabHeader = React.forwardRef(
 	(
 		{
-			active = false,
-			component = 'button',
+			activeIndex,
+			component,
 			disabled = false,
-			onClick = () => {},
+			dropdown = false,
 			forwardRef,
+			itemElementProps = {},
+			itemKey,
+			onClick,
+			spritemap,
 			tabName,
-		}: IProps
+		}: any,
+		IProps
 	) => {
-	if (component === 'anchor') {
+		const active = activeIndex === itemKey;
+
+		if (component === 'anchor') {
+			return (
+				<>
+					<a
+						aria-controls={tabName.toLowerCase()}
+						aria-disabled={!active}
+						aria-selected={!active}
+						className={classNames('nav-link', {
+							active,
+							disabled,
+						})}
+						href={`#${tabName.trim().toLowerCase()}`}
+						id={`${tabName}Tab`}
+						onClick={() => onClick && onClick(itemKey)}
+						ref={forwardRef}
+						role="tab"
+						tabIndex={disabled ? -1 : undefined}
+						{...itemElementProps}
+					>
+						{tabName}
+						{dropdown && spritemap && (
+							<svg
+								className="lexicon-icon lexicon-icon-caret-bottom"
+								role="presentation"
+							>
+								<use xlinkHref={`${spritemap}#caret-bottom`} />
+							</svg>
+						)}
+					</a>
+				</>
+			);
+		}
+
 		return (
-			<a
-				aria-controls={tabName.toLowerCase()}
-				aria-disabled={!active}
-				aria-selected={active}
-				className={classNames('nav-link', {
-					active,
-					disabled,
-				})}
-				href={`#${tabName.trim().toLowerCase()}`}
-				id={`${tabName}Tab`}
-				onClick={onClick}
-				ref={forwardRef}
-				role="tab"
-				tabIndex={disabled ? -1 : undefined}
-			>
-				{tabName}
-			</a>
+			<>
+				<button
+					aria-controls={tabName.toLowerCase()}
+					aria-disabled={!active}
+					aria-selected={active}
+					className={classNames('btn btn-unstyled nav-link', {
+						active,
+						disabled,
+					})}
+					id={`${tabName}Tab`}
+					onClick={() => onClick && onClick(itemKey)}
+					ref={forwardRef}
+					role="tab"
+					tabIndex={disabled ? -1 : undefined}
+					type="button"
+					{...itemElementProps}
+				>
+					{tabName}
+					{dropdown && spritemap && (
+						<svg
+							className="lexicon-icon lexicon-icon-caret-bottom"
+							role="presentation"
+						>
+							<use xlinkHref={`${spritemap}#caret-bottom`} />
+						</svg>
+					)}
+				</button>
+			</>
 		);
 	}
-
-	return (
-		<button
-			aria-controls={tabName.toLowerCase()}	
-			aria-disabled={!active}
-			aria-selected={active}
-			className={classNames('btn btn-unstyled nav-link', {
-				active,
-				disabled,
-			})}
-			id={`${tabName}Tab`}
-			onClick={onClick}
-			ref={forwardRef}
-			role="tab"
-			tabIndex={disabled ? -1 : undefined}
-			type="button"
-		>
-			{tabName}
-		</button>
-	);
-});
+);
 
 const Item: React.FunctionComponent<IProps> = ({
-	active,
-	component,
 	className,
 	disabled,
 	dropdown,
 	forwardRef,
-	onClick,
+	itemElementProps,
+	itemKey,
+	onClick = () => {},
 	tabName,
 	...otherProps
 }: IProps) => {
+	const {activeIndex, component, spritemap} = useContext(Context);
+
 	return (
 		<li
 			className={classNames(
@@ -117,13 +146,16 @@ const Item: React.FunctionComponent<IProps> = ({
 		>
 			{tabName && (
 				<TabHeader
-					active={active}
+					activeIndex={activeIndex}
 					component={component}
 					disabled={disabled}
-					onClick={(event: React.BaseSyntheticEvent) => onClick && onClick(event)}
+					dropdown={dropdown}
 					forwardRef={forwardRef}
+					itemElementProps={itemElementProps}
+					itemKey={itemKey}
+					onClick={onClick}
+					spritemap={spritemap}
 					tabName={tabName}
-					{...otherProps}
 				/>
 			)}
 		</li>

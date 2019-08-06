@@ -17,6 +17,8 @@ interface ITabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
 	 * Flag to indicate if `fade` classname that applies an fading animation should be applied.
 	 */
 	fade?: boolean;
+
+	keyValue: number;
 }
 
 const delay = (fn: Function) => {

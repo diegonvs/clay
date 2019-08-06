@@ -6,22 +6,12 @@
 
 import classNames from 'classnames';
 import Content from './Content';
+import Context, {IContext} from './Context';
 import Item from './Item';
 import React from 'react';
 import TabPane from './TabPane';
-import {ElementType} from './types';
 
-interface IProps extends React.HTMLAttributes<HTMLUListElement> {
-	/**
-	 * Receives a number that indicates the content index that will be rendered.
-	 */
-	activeIndex: number;
-
-	/**
-	 * Tab Item component to render. Can be an 'anchor' or a 'button'.
-	 */
-	component?: ElementType;
-
+interface IProps extends React.HTMLAttributes<HTMLUListElement>, IContext {
 	/**
 	 * Justify the nav items according the tab content.
 	 */
@@ -31,11 +21,6 @@ interface IProps extends React.HTMLAttributes<HTMLUListElement> {
 	 * Applies a modern style to the tab.
 	 */
 	modern?: boolean;
-
-	/**
-	 * Callback to be used when clicking to a Tab Item.
-	 */
-	onValueChange?: (val: number) => void;
 }
 
 export const ClayTabs: React.FunctionComponent<IProps> & {
@@ -43,41 +28,39 @@ export const ClayTabs: React.FunctionComponent<IProps> & {
 	TabPane: typeof TabPane;
 	Item: typeof Item;
 } = ({
-	activeIndex = 0,
+	activeIndex,
 	children,
 	className,
 	component = 'button',
 	justified,
 	modern = false,
-	onValueChange,
+	spritemap,
 	...otherProps
 }: IProps) => {
+	const context = {
+		activeIndex: activeIndex || 0,
+		component: component || 'button',
+		spritemap,
+	};
+
 	return (
-		<ul
-			className={classNames(`nav`, {
-				'nav-justified': justified,
-				'nav-tabs': !modern,
-				'nav-underline': modern,
-			})}
-			role="tablist"
-			{...otherProps}
-		>
-			{React.Children.map(children, (child, index) => {
-				if (!React.isValidElement(child)) {
-					return null;
-				}
-				return React.cloneElement(child, {
-					...child.props,
-					active: activeIndex === index,
-					component,
-					key: index,
-					onClick: () => {
-						console.log(index);
-						return onValueChange && onValueChange(index);
+		<Context.Provider value={context}>
+			<ul
+				className={classNames(
+					`nav`,
+					{
+						'nav-justified': justified,
+						'nav-tabs': !modern,
+						'nav-underline': modern,
 					},
-				});
-			})}
-		</ul>
+					className
+				)}
+				role="tablist"
+				{...otherProps}
+			>
+				{children}
+			</ul>
+		</Context.Provider>
 	);
 };
 
