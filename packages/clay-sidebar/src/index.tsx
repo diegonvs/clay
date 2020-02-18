@@ -8,9 +8,10 @@
 import React from 'react';
 
 import Divider from './Divider';
+import Panel from './Panel';
 import Search from './Search';
 import Toolbar from './Toolbar';
-import ToolbarItems from './ToolbarItems';
+import ToolbarItem from './ToolbarItem';
 
 type TDirection = 'left' | 'right';
 
@@ -42,7 +43,8 @@ const ClaySidebar: React.FunctionComponent<IProps> = ({
 
 export default Object.assign(ClaySidebar, {
 	Divider,
+	Panel,
 	Search,
 	Toolbar,
-	ToolbarItems,
+	ToolbarItem,
 });

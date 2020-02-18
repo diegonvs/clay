@@ -7,7 +7,7 @@
 import '@clayui/css/lib/css/atlas.css';
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg');
 import {storiesOf} from '@storybook/react';
-import React from 'react';
+import React, {useState} from 'react';
 
 import ClaySidebar from '../src';
 
@@ -22,13 +22,42 @@ const panels = [
 		label: 'Calendar',
 		panelId: 1,
 	},
+	{
+		icon: 'bolt',
+		label: 'Speed',
+		panelId: 2,
+	},
 ];
 
-storiesOf('Components|ClaySidebar', module).add('default', () => (
-	<ClaySidebar>
-		<ClaySidebar.Toolbar>
-			<ClaySidebar.ToolbarItems panels={panels} spritemap={spritemap} />
-		</ClaySidebar.Toolbar>
-		<ClaySidebar.Search spritemap={spritemap} />
-	</ClaySidebar>
-));
+storiesOf('Components|ClaySidebar', module).add('default', () => {
+	const [activePanelId, setActivePanelId] = useState<number>(0);
+
+	return (
+		<ClaySidebar>
+			<ClaySidebar.Panel show={activePanelId === 0}>
+				<ClaySidebar.Search spritemap={spritemap} />
+				<h1>{'Panel 1'}</h1>
+			</ClaySidebar.Panel>
+			<ClaySidebar.Panel show={activePanelId === 1}>
+				<ClaySidebar.Search spritemap={spritemap} />
+				<h1>{'Panel 2'}</h1>
+			</ClaySidebar.Panel>
+			<ClaySidebar.Panel show={activePanelId === 2}>
+				<ClaySidebar.Search spritemap={spritemap} />
+				<h1>{'Panel 3'}</h1>
+			</ClaySidebar.Panel>
+			<ClaySidebar.Toolbar>
+				{panels.map(({icon, label, panelId}) => (
+					<ClaySidebar.ToolbarItem
+						icon={icon}
+						key={`ToolbarItem${panelId}`}
+						label={label}
+						onClick={() => setActivePanelId(panelId)}
+						panelId={panelId}
+						spritemap={spritemap}
+					/>
+				))}
+			</ClaySidebar.Toolbar>
+		</ClaySidebar>
+	);
+});
