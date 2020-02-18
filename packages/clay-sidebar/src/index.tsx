@@ -36,7 +36,7 @@ const ClaySidebar: React.FunctionComponent<IProps> = ({
 
 	return (
 		<div className="sidenav-fixed sidenav-fixed-end" {...otherProps}>
-			<div className="sidebar sidebar-light">{children}</div>
+			<ul className="tbar-nav">{children}</ul>
 		</div>
 	);
 };

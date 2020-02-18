@@ -5,6 +5,7 @@
  */
 
 import '@clayui/css/lib/css/atlas.css';
+import {ClayButtonWithIcon} from '@clayui/button';
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg');
 import {storiesOf} from '@storybook/react';
 import React, {useState} from 'react';
@@ -13,49 +14,69 @@ import ClaySidebar from '../src';
 
 const panels = [
 	{
+		expand: true,
 		icon: 'chip',
 		label: 'Infrastructure',
-		panelId: 0,
+		panelId: 'infra',
 	},
 	{
 		icon: 'calendar',
 		label: 'Calendar',
-		panelId: 1,
+		panelId: 'cal',
 	},
 	{
+		expand: true,
 		icon: 'bolt',
 		label: 'Speed',
-		panelId: 2,
+		panelId: 'speed',
 	},
 ];
 
 storiesOf('Components|ClaySidebar', module).add('default', () => {
-	const [activePanelId, setActivePanelId] = useState<number>(0);
+	const [activePanelId, setActivePanelId] = useState<string>('');
 
 	return (
 		<ClaySidebar>
-			<ClaySidebar.Panel show={activePanelId === 0}>
-				<ClaySidebar.Search spritemap={spritemap} />
+			<ClaySidebar.Panel show={activePanelId === 'infra'}>
 				<h1>{'Panel 1'}</h1>
+				<ClaySidebar.Search
+					placeholder="Search on Panel 1"
+					spritemap={spritemap}
+				/>
 			</ClaySidebar.Panel>
-			<ClaySidebar.Panel show={activePanelId === 1}>
-				<ClaySidebar.Search spritemap={spritemap} />
+			<ClaySidebar.Panel show={activePanelId === 'cal'}>
 				<h1>{'Panel 2'}</h1>
+				<ClaySidebar.Search
+					placeholder="Search on Panel 2"
+					spritemap={spritemap}
+				/>
 			</ClaySidebar.Panel>
-			<ClaySidebar.Panel show={activePanelId === 2}>
-				<ClaySidebar.Search spritemap={spritemap} />
+			<ClaySidebar.Panel show={activePanelId === 'speed'}>
 				<h1>{'Panel 3'}</h1>
+				<ClaySidebar.Search
+					placeholder="Search on Panel 3"
+					spritemap={spritemap}
+				/>
 			</ClaySidebar.Panel>
 			<ClaySidebar.Toolbar>
-				{panels.map(({icon, label, panelId}) => (
+				{panels.map(({expand, icon, label, panelId}) => (
 					<ClaySidebar.ToolbarItem
-						icon={icon}
+						expand={expand}
 						key={`ToolbarItem${panelId}`}
-						label={label}
-						onClick={() => setActivePanelId(panelId)}
-						panelId={panelId}
-						spritemap={spritemap}
-					/>
+					>
+						<ClayButtonWithIcon
+							aria-label={label}
+							onClick={() => {
+								if (activePanelId === panelId) {
+									setActivePanelId('');
+									return;
+								}
+								setActivePanelId(panelId);
+							}}
+							spritemap={spritemap}
+							symbol={icon}
+						/>
+					</ClaySidebar.ToolbarItem>
 				))}
 			</ClaySidebar.Toolbar>
 		</ClaySidebar>

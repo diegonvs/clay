@@ -16,6 +16,7 @@ interface ISearchProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Search: React.FunctionComponent<ISearchProps> = ({
 	className,
+	placeholder,
 	spritemap,
 	...otherProps
 }) => {
@@ -27,7 +28,7 @@ const Search: React.FunctionComponent<ISearchProps> = ({
 			<ClayInput.Group>
 				<ClayInput.GroupItem prepend>
 					<ClayInput
-						placeholder="Search application"
+						placeholder={placeholder}
 						sizing="sm"
 						type="search"
 					/>

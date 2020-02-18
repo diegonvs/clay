@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-import classNames from 'classnames';
 import React from 'react';
 
 interface IPanelProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -18,12 +17,7 @@ const Panel: React.FunctionComponent<IPanelProps> = ({
 }) => {
 	if (show) {
 		return (
-			<div
-				className={classNames('sidebar sidebar-light', {
-					show,
-				})}
-				{...otherProps}
-			>
+			<div className="sidebar sidebar-light" {...otherProps}>
 				{children}
 			</div>
 		);
